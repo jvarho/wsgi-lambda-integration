@@ -1,0 +1,15 @@
+{
+  "name": "wsgi-lambda-integration",
+  "version": "1.0.0",
+  "dependencies": {
+    "serverless": "^2.30.3",
+    "serverless-wsgi": "git@github.com:jvarho/serverless-wsgi.git#apigateway-lambda-integration"
+  },
+  "scripts": {
+    "deploy": "sls deploy",
+    "logs": "sls logs -f hello",
+    "start": "sls wsgi serve -p 6550"
+  },
+  "author": "Jan Varho",
+  "license": "ISC"
+}

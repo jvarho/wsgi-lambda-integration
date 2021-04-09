@@ -1,0 +1,41 @@
+service: wsgi-lambda-integration
+
+provider:
+  name: aws
+  runtime: python3.8
+  lambdaHashingVersion: 20201221
+  environment:
+    STRIP_STAGE_PATH: yes
+
+custom:
+  wsgi:
+    app: handler.__hug_wsgi__
+    packRequirements: false
+
+functions:
+  hello:
+    handler: wsgi_handler.handler
+    events:
+      - http:
+          method: any
+          path: /sync/{proxy}
+          integration: lambda
+          response:
+            headers:
+              Content-Type: "'application/json'"
+            template: '$input.path("$.body")'
+            statusCodes:
+              200:
+                pattern: ''
+              400:
+                pattern: '.*"statusCode":400.*'
+              500:
+                pattern: '.*"statusCode":.*'
+      - http:
+          method: any
+          path: /async/{proxy+}
+          async: true
+
+plugins:
+  - serverless-wsgi
+  - serverless-python-requirements
